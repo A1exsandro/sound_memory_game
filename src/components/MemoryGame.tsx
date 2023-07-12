@@ -2,8 +2,7 @@ import Card from './Card'
 import { useMemory } from '../contexts/MemoryContext'
 
 const MemoryGame = () => {
-  const { data } = useMemory()
-  console.log(data)
+  const { } = useMemory()
 
   return (
     <div className="p-2">
