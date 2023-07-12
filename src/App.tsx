@@ -1,4 +1,5 @@
 import MemoryGame from "./components/MemoryGame"
+import { MemoryContextProvider } from "./contexts/MemoryContext"
 
 const App = () => { 
 
@@ -9,7 +10,9 @@ const App = () => {
       </div>
       
       <div className="">
-        <MemoryGame />
+        <MemoryContextProvider>
+          <MemoryGame />
+        </MemoryContextProvider>
       </div>
     </>
   )

@@ -11,3 +11,5 @@
 * components
   * MemoryGame.tsx
   * Card.tsx
+* contexts
+  * MemoryContext.tsx
