@@ -5,3 +5,9 @@
 >Encontre o par correspondente e marque ponto.
 
 ## A React App with TypeScript, Tailwind and more
+
+### Basic Structure
+
+* components
+  * MemoryGame.tsx
+  * Card.tsx
