@@ -1,9 +1,8 @@
-import './App.css'
 
 const App = () => { 
 
   return ( 
-    <div>
+    <div className="bg-black text-white flex justify-center py-2">
       Sound Memory Game
     </div> 
   )
