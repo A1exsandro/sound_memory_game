@@ -3,6 +3,7 @@ import { useEffect, useState } from "react"
 import { getStorage } from '../services/Firebase'
 import { ref, getDownloadURL } from "firebase/storage" 
 import { cardNames } from "../constants/cards"
+import { useMemory } from "../contexts/MemoryContext";
 
 interface Card {
   id?: number;
@@ -16,6 +17,7 @@ const storage = getStorage()
 const data = cardNames
 
 export const useFetch = () => {
+  const { gameLevel } = useMemory()
   const [images, setImages] = useState<string[]>([])
   const [sounds, setSounds] = useState<string[]>([])
   const makedCards: Card[] = []
@@ -36,7 +38,7 @@ export const useFetch = () => {
   },[])
 
   // CREATING AN OBJECT THROUGH ARRAY INTERACTION
-  for (let i = 0; i < data.length; i++) {
+  for (let i = 0; i < data.length && i < gameLevel; i++) {
     makedCards[i] = {
       idBoth: i,  
       imageName: data[i],

@@ -24,6 +24,8 @@ interface MemoryContextInterface {
   idFoundPairsCards: any[];  
   startGame: () => void;
   resetGame: () => void;
+  gameLevel: number;
+  setGameLevel: React.Dispatch<React.SetStateAction<number>>;
 }
 
 const initialValue: MemoryContextInterface = { 
@@ -37,6 +39,8 @@ const initialValue: MemoryContextInterface = {
   idFoundPairsCards: [],
   startGame: () => {},
   resetGame: () => {},
+  gameLevel: 4,
+  setGameLevel: () => {}
 }
  
 // CREATE THE CONTEXT
@@ -53,6 +57,7 @@ export const MemoryContextProvider = ({ children }: UserContextProps) => {
   const [loading, setLoading] = React.useState(false)
   const [numbersCardsFlipped, setNumbersCardsFlipped] = React.useState(0)
   const [score, setScore] = React.useState(0)
+  const [gameLevel,setGameLevel] = React.useState(initialValue.gameLevel)
 
   const startGame = () => {
     setLoading(true)  
@@ -74,7 +79,9 @@ export const MemoryContextProvider = ({ children }: UserContextProps) => {
     idsFlippedCards,
     idFoundPairsCards,
     startGame,
-    resetGame
+    resetGame,
+    gameLevel,
+    setGameLevel
   }
 
   return (
