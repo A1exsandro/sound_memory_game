@@ -1,12 +1,21 @@
 import * as React from "react"
+import { useFetch } from "../hooks/useFetch";
 
 type UserContextProps = {
   children: React.ReactNode;
 }
 
-interface MemoryContextInterface {
-  cards: any[];  
-  setCards: React.Dispatch<React.SetStateAction<any[]>>;
+interface Card {
+  id?: number;
+  idBoth: number;
+  imageName: string;
+  imageUrl: string;
+  soundUrl: string;
+}
+
+interface MemoryContextInterface { 
+  cards: Card[];  
+  setCards: React.Dispatch<React.SetStateAction<Card[]>>;
   loading: boolean;
   numbersCardsFlipped: number;
   score: number;
@@ -17,7 +26,7 @@ interface MemoryContextInterface {
   resetGame: () => void;
 }
 
-const initialValue: MemoryContextInterface = {
+const initialValue: MemoryContextInterface = { 
   cards: [],
   setCards: () => {},
   loading: false,
@@ -35,9 +44,9 @@ const MemoryContext = React.createContext<MemoryContextInterface>(initialValue)
 
 // CREATE THE PROVEDOR
 export const MemoryContextProvider = ({ children }: UserContextProps) => {
-
   // ADD CONTEXT
-  const [cards, setCards] = React.useState<any[]>([])  
+  const { shuffledCards } = useFetch() 
+  const [cards, setCards] = React.useState<Card[]>(initialValue.cards)  
   const [idsFlippedCards, setIdsFlippedCards] = React.useState<any[]>([])
   const [idFoundPairsCards, setIdFoundPairsCards] = React.useState<any[]>([])
  
@@ -45,7 +54,11 @@ export const MemoryContextProvider = ({ children }: UserContextProps) => {
   const [numbersCardsFlipped, setNumbersCardsFlipped] = React.useState(0)
   const [score, setScore] = React.useState(0)
 
-  const startGame = () => {}
+  const startGame = () => {
+    setLoading(true)  
+    setCards(shuffledCards)
+    setLoading(false)
+  }
 
   const resetGame = () => {}
 
