@@ -1,37 +1,58 @@
-import { useState } from 'react'
+import { useRef, useState } from 'react'
+import { Tilt } from 'react-tilt';
 
-const Card = () => {
+interface Card {
+  id?: number;
+  idBoth: number;
+  imageName: string;
+  imageUrl: string;
+  soundUrl: string;
+}
+
+const Card = ({ id, idBoth, imageName, imageUrl, soundUrl }: Card) => {
   const [flipped, setFlipped] = useState(true)
+  const audioRef = useRef(null) 
 
   const handleClick = () => { 
     setFlipped(!flipped)
-  } 
-
+  }  
+  console.log(id)
   return (
-    <div className="">
+    <Tilt
+            options={{
+              max: 45,
+              scale: 1,
+              speed: 450
+            }}
+          >
       <div 
-        onClick={() => handleClick()}
         className={`aspect-[3/4] card-container rounded-xl 
         ${flipped ? '' : 'rotateY'}`}
+        onClick={() => handleClick()}
       >
+        <audio ref={audioRef}>
+          <source src={soundUrl} /> 
+        </audio>
+          
         {/* FRONT OF CARD */}
         <div 
           className="flex justify-center items-center flip rotateY rounded-xl
           bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500"
-        > 
-          Front
+        >
+          <img 
+            className="w-full h-full rounded-xl"
+            src={imageUrl} 
+            alt={imageName}
+          /> 
         </div>
 
         {/* BACK OF CARD */}
-        <div 
-          className="flex justify-center items-center bg-red-400 flip 
-          backface-none rounded-xl"
+        <div className="flex justify-center items-center bg-red-400 flip backface-none rounded-xl"
         >
-          Back
+          
         </div>
-
       </div>
-    </div>
+    </Tilt>
   )
 }
 
