@@ -1,5 +1,6 @@
 import Card from './Card'
 import { useMemory } from '../contexts/MemoryContext' 
+import Players from './Players'
 
 const MemoryGame = () => { 
   const { cards, startGame } = useMemory()
@@ -7,6 +8,9 @@ const MemoryGame = () => {
   return (
     <div className="p-3">
       <h1>Memory Game</h1>
+
+      <Players />
+      
       <button
         className="bg-black text-white cursor-pointer px-4"
         onClick={startGame}

@@ -13,6 +13,12 @@ interface Card {
   soundUrl: string;
 }
 
+interface PlayersProps {
+  name: string,
+  score: number,
+  current: boolean
+}
+
 interface MemoryContextInterface { 
   cards: Card[];  
   setCards: React.Dispatch<React.SetStateAction<Card[]>>;
@@ -26,6 +32,8 @@ interface MemoryContextInterface {
   resetGame: () => void;
   gameLevel: number;
   setGameLevel: React.Dispatch<React.SetStateAction<number>>;
+  players: PlayersProps[];
+  currentPlayerIndex: number;
 }
 
 const initialValue: MemoryContextInterface = { 
@@ -40,7 +48,9 @@ const initialValue: MemoryContextInterface = {
   startGame: () => {},
   resetGame: () => {},
   gameLevel: 4,
-  setGameLevel: () => {}
+  setGameLevel: () => {},
+  players: [],
+  currentPlayerIndex: 0
 }
  
 // CREATE THE CONTEXT
@@ -58,6 +68,31 @@ export const MemoryContextProvider = ({ children }: UserContextProps) => {
   const [numbersCardsFlipped, setNumbersCardsFlipped] = React.useState(0)
   const [score, setScore] = React.useState(0)
   const [gameLevel,setGameLevel] = React.useState(initialValue.gameLevel)
+
+  const [currentPlayerIndex, setCurrentPlayerIndex] = React.useState(0)
+  const [players, setPlayers] = React.useState([
+    {
+      name: 'Alexsandro ',
+      score: 0,
+      current: true
+    },
+    {
+      name: 'Adriana ',
+      score: 0,
+      current: false
+    },
+    {
+      name: 'Kemilly ',
+      score: 0,
+      current: false
+    },
+    {
+      name: 'Alexia ',
+      score: 0,
+      current: false
+    }
+  ])
+
 
   const startGame = () => {
     setLoading(true)  
@@ -81,7 +116,9 @@ export const MemoryContextProvider = ({ children }: UserContextProps) => {
     startGame,
     resetGame,
     gameLevel,
-    setGameLevel
+    setGameLevel,
+    players,
+    currentPlayerIndex, 
   }
 
   return (
