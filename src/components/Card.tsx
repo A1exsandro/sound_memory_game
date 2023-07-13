@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react'
+import { useRef, MutableRefObject, useState } from 'react'
 import { Tilt } from 'react-tilt';
 
 interface Card {
@@ -11,9 +11,16 @@ interface Card {
 
 const Card = ({ id, idBoth, imageName, imageUrl, soundUrl }: Card) => {
   const [flipped, setFlipped] = useState(true)
-  const audioRef = useRef(null) 
+  const audioRef: MutableRefObject<HTMLAudioElement | null> = useRef(null) 
+
+  const playAudio = () => {
+    if (audioRef.current) {
+      audioRef.current.play()
+    }
+  } 
 
   const handleClick = () => { 
+    playAudio()
     setFlipped(!flipped)
   }  
   console.log(id)
@@ -26,7 +33,7 @@ const Card = ({ id, idBoth, imageName, imageUrl, soundUrl }: Card) => {
             }}
           >
       <div 
-        className={`aspect-[3/4] card-container rounded-xl 
+        className={`aspect-[3/4] card-container rounded-xl
         ${flipped ? '' : 'rotateY'}`}
         onClick={() => handleClick()}
       >
