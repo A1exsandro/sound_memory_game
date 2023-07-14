@@ -24,8 +24,7 @@ interface MemoryContextInterface {
   cards: Card[];  
   setCards: React.Dispatch<React.SetStateAction<Card[]>>;
   loading: boolean;
-  numbersCardsFlipped: number;
-  score: number;
+  numbersCardsFlipped: number; 
   showCard: ({id, idBoth}: {id:number, idBoth: number}) => void;
   idsFlippedCards: number[];  
   idFoundPairsCards: number[];  
@@ -33,7 +32,7 @@ interface MemoryContextInterface {
   resetGame: () => void;
   gameLevel: number;
   setGameLevel: React.Dispatch<React.SetStateAction<number>>;
-  players: PlayersProps[];
+  players: PlayersProps[]; 
   currentPlayerIndex: number;
 }
 
@@ -41,8 +40,7 @@ const initialValue: MemoryContextInterface = {
   cards: [],
   setCards: () => {},
   loading: false,
-  numbersCardsFlipped: 0,
-  score: 0,
+  numbersCardsFlipped: 0, 
   showCard: () => {},
   idsFlippedCards: [],
   idFoundPairsCards: [],
@@ -50,7 +48,7 @@ const initialValue: MemoryContextInterface = {
   resetGame: () => {},
   gameLevel: 4,
   setGameLevel: () => {},
-  players: [],
+  players: [], 
   currentPlayerIndex: 0
 }
  
@@ -68,11 +66,10 @@ export const MemoryContextProvider = ({ children }: UserContextProps) => {
   const [idFoundPairsCards, setIdFoundPairsCards] = React.useState<number[]>([])
  
   
-  const [numbersCardsFlipped, setNumbersCardsFlipped] = React.useState(0)
-  const [currentPlayerIndex, setCurrentPlayerIndex] = React.useState(0)
-  const [score, setScore] = React.useState(0)
+  const [numbersCardsFlipped, setNumbersCardsFlipped] = React.useState(0) 
   const [gameLevel,setGameLevel] = React.useState(initialValue.gameLevel)
 
+  const [currentPlayerIndex, setCurrentPlayerIndex] = React.useState(0)
   const [players, setPlayers] = React.useState([
     {
       name: 'Alexsandro ',
@@ -137,8 +134,23 @@ export const MemoryContextProvider = ({ children }: UserContextProps) => {
     // CHECK CARDS
     const sameCards = checkCards(ids)
     if (sameCards) {
-      setScore(amount => amount + 1)
+      
+      setPlayers((prev: PlayersProps[]) => {
+        const prevPlayers = [...prev]
+        prevPlayers[currentPlayerIndex] = {
+          ...prev[currentPlayerIndex],
+          score: prev[currentPlayerIndex].score + 1
+        }
+        return prevPlayers
+      })
       setIdFoundPairsCards((ids) => [...ids, idBoth])
+      
+    } else {
+      if (currentPlayerIndex < players.length - 1) {
+        setCurrentPlayerIndex( current => current + 1)
+      } else {
+        setCurrentPlayerIndex(0)
+      }
     }
 
     const time = sameCards ? 0 : TEMPO_MS.FLIP_CARDS
@@ -152,8 +164,7 @@ export const MemoryContextProvider = ({ children }: UserContextProps) => {
     cards,
     setCards,
     loading,
-    numbersCardsFlipped,
-    score,
+    numbersCardsFlipped, 
     showCard,
     idsFlippedCards,
     idFoundPairsCards,
