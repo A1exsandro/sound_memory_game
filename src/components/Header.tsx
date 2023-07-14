@@ -1,4 +1,5 @@
 import { useMemory } from "../contexts/MemoryContext"
+import GameConfig from "./GameConfig"
 
 const Header = () => {
 	const { idFoundPairsCards, cards, numbersCardsFlipped, startGame } = useMemory()
@@ -29,6 +30,10 @@ const Header = () => {
             <p className="text-center font-bold text-2xl">
               Ouça a palavra em Inglês a cada carta virada
             </p>
+
+            <div className="w-full bg-black flex justify-center rounded-xl">
+              <GameConfig />
+            </div>
 
             <button 
               onClick={startGame}
