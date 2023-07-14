@@ -1,4 +1,4 @@
-import { useRef, MutableRefObject } from 'react'
+import { useRef, MutableRefObject, useEffect } from 'react'
 import { Tilt } from 'react-tilt'
 import { useMemory } from '../contexts/MemoryContext'
 
@@ -13,7 +13,12 @@ interface Card {
 const Card = ({ id, idBoth, imageName, imageUrl, soundUrl }: Card) => {
   const { idsFlippedCards, idFoundPairsCards, showCard } = useMemory()
   const flipped = idsFlippedCards.includes(id) || idFoundPairsCards.includes(idBoth)
-  const audioRef: MutableRefObject<HTMLAudioElement | null> = useRef(null) 
+  const audioRef: MutableRefObject<HTMLAudioElement | null> = useRef(null)
+
+  useEffect(() => {
+    const audioElement = new Audio(soundUrl)
+    audioRef.current = audioElement
+  },[soundUrl])
 
   const playAudio = () => {
     if (audioRef.current) {
@@ -39,7 +44,7 @@ const Card = ({ id, idBoth, imageName, imageUrl, soundUrl }: Card) => {
         ${flipped ? 'rotateY' : ''}`}
         onClick={() => handleClick()}
       >
-        <audio ref={audioRef}>
+        <audio>
           <source src={soundUrl} /> 
         </audio>
           
