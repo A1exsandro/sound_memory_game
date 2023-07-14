@@ -6,7 +6,7 @@ import { cardNames } from "../constants/cards"
 import { useMemory } from "../contexts/MemoryContext";
 
 interface Card {
-  id?: number;
+  id: number;
   idBoth: number;
   imageName: string;
   imageUrl: string;
@@ -20,7 +20,7 @@ export const useFetch = () => {
   const { gameLevel } = useMemory()
   const [images, setImages] = useState<string[]>([])
   const [sounds, setSounds] = useState<string[]>([])
-  const makedCards: Card[] = []
+  const makedCards = []
 
   // GET DATA FROM FIREBASE
   useEffect(() => {

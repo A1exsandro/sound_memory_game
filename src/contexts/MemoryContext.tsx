@@ -1,12 +1,13 @@
 import * as React from "react"
-import { useFetch } from "../hooks/useFetch";
+import { useFetch } from "../hooks/useFetch"
+import { TEMPO_MS } from "../constants/config"
 
 type UserContextProps = {
   children: React.ReactNode;
 }
 
 interface Card {
-  id?: number;
+  id: number;
   idBoth: number;
   imageName: string;
   imageUrl: string;
@@ -25,9 +26,9 @@ interface MemoryContextInterface {
   loading: boolean;
   numbersCardsFlipped: number;
   score: number;
-  showCard: () => void;
-  idsFlippedCards: any[];  
-  idFoundPairsCards: any[];  
+  showCard: ({id, idBoth}: {id:number, idBoth: number}) => void;
+  idsFlippedCards: number[];  
+  idFoundPairsCards: number[];  
   startGame: () => void;
   resetGame: () => void;
   gameLevel: number;
@@ -60,16 +61,18 @@ const MemoryContext = React.createContext<MemoryContextInterface>(initialValue)
 export const MemoryContextProvider = ({ children }: UserContextProps) => {
   // ADD CONTEXT
   const { shuffledCards } = useFetch() 
-  const [cards, setCards] = React.useState<Card[]>(initialValue.cards)  
-  const [idsFlippedCards, setIdsFlippedCards] = React.useState<any[]>([])
-  const [idFoundPairsCards, setIdFoundPairsCards] = React.useState<any[]>([])
- 
   const [loading, setLoading] = React.useState(false)
+
+  const [cards, setCards] = React.useState<Card[]>(initialValue.cards)  
+  const [idsFlippedCards, setIdsFlippedCards] = React.useState<number[]>([])
+  const [idFoundPairsCards, setIdFoundPairsCards] = React.useState<number[]>([])
+ 
+  
   const [numbersCardsFlipped, setNumbersCardsFlipped] = React.useState(0)
+  const [currentPlayerIndex, setCurrentPlayerIndex] = React.useState(0)
   const [score, setScore] = React.useState(0)
   const [gameLevel,setGameLevel] = React.useState(initialValue.gameLevel)
 
-  const [currentPlayerIndex, setCurrentPlayerIndex] = React.useState(0)
   const [players, setPlayers] = React.useState([
     {
       name: 'Alexsandro ',
@@ -102,7 +105,48 @@ export const MemoryContextProvider = ({ children }: UserContextProps) => {
 
   const resetGame = () => {}
 
-  const showCard = () => {}
+  // INCREMENT A VALUE WHEN THE CARD IS FLIPPED
+  const numberOfTimesFlipped = () => {
+    setNumbersCardsFlipped((amount) => amount + 1)
+  }
+
+  // CHECK CARDS
+  const checkCards = ([id1, id2]: number[]) => {
+    const idPair1 = cards.find(({ id }) => id === id1)?.idBoth
+    const idPair2 = cards.find(({ id }) => id === id2)?.idBoth
+    return idPair1 === idPair2
+  }
+
+  // SHOW CARD
+  const showCard = ({ id, idBoth }: {id:number, idBoth: number}) => {
+    const isCardFlipped = idsFlippedCards.includes(id) || idFoundPairsCards.includes(idBoth)
+    if (isCardFlipped) return
+
+    numberOfTimesFlipped()
+
+    if (idsFlippedCards.length >= 2) {
+      return setIdsFlippedCards([])
+    }
+    if (idsFlippedCards.length === 0) {
+      return setIdsFlippedCards([id])
+    }
+
+    const ids: number[] = [idsFlippedCards[0], id]
+    setIdsFlippedCards(ids)
+
+    // CHECK CARDS
+    const sameCards = checkCards(ids)
+    if (sameCards) {
+      setScore(amount => amount + 1)
+      setIdFoundPairsCards((ids) => [...ids, idBoth])
+    }
+
+    const time = sameCards ? 0 : TEMPO_MS.FLIP_CARDS
+
+    setTimeout(() => {
+      setIdsFlippedCards([])
+    }, time)
+  }
 
   const contextValue: MemoryContextInterface = {
     cards,

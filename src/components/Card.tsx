@@ -1,8 +1,9 @@
-import { useRef, MutableRefObject, useState } from 'react'
-import { Tilt } from 'react-tilt';
+import { useRef, MutableRefObject } from 'react'
+import { Tilt } from 'react-tilt'
+import { useMemory } from '../contexts/MemoryContext'
 
 interface Card {
-  id?: number;
+  id: number;
   idBoth: number;
   imageName: string;
   imageUrl: string;
@@ -10,7 +11,8 @@ interface Card {
 }
 
 const Card = ({ id, idBoth, imageName, imageUrl, soundUrl }: Card) => {
-  const [flipped, setFlipped] = useState(true)
+  const { idsFlippedCards, idFoundPairsCards, showCard } = useMemory()
+  const flipped = idsFlippedCards.includes(id) || idFoundPairsCards.includes(idBoth)
   const audioRef: MutableRefObject<HTMLAudioElement | null> = useRef(null) 
 
   const playAudio = () => {
@@ -20,21 +22,21 @@ const Card = ({ id, idBoth, imageName, imageUrl, soundUrl }: Card) => {
   } 
 
   const handleClick = () => { 
-    playAudio()
-    setFlipped(!flipped)
+    playAudio() 
+    showCard({ id, idBoth })
   }  
-  console.log(id)
+  // console.log(id)
   return (
     <Tilt
-            options={{
-              max: 45,
-              scale: 1,
-              speed: 450
-            }}
-          >
+      options={{
+        max: 45,
+        scale: 1,
+        speed: 450
+      }}
+    >
       <div 
         className={`aspect-[3/4] card-container rounded-xl
-        ${flipped ? '' : 'rotateY'}`}
+        ${flipped ? 'rotateY' : ''}`}
         onClick={() => handleClick()}
       >
         <audio ref={audioRef}>
@@ -43,21 +45,20 @@ const Card = ({ id, idBoth, imageName, imageUrl, soundUrl }: Card) => {
           
         {/* FRONT OF CARD */}
         <div 
-          className="flex justify-center items-center flip rotateY rounded-xl
-          bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500"
-        >
+          className="flex justify-center items-center flip rotateY rounded-xl"
+        > 
           <img 
             className="w-full h-full rounded-xl"
             src={imageUrl} 
             alt={imageName}
-          /> 
+          />
         </div>
 
         {/* BACK OF CARD */}
-        <div className="flex justify-center items-center bg-red-400 flip backface-none rounded-xl"
-        >
-          
-        </div>
+        <div 
+          className="flex justify-center items-center flip backface-none rounded-xl
+          bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500"
+        />  
       </div>
     </Tilt>
   )
