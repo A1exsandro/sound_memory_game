@@ -16,8 +16,7 @@ interface Card {
 
 interface PlayersProps {
   name: string,
-  score: number,
-  current: boolean
+  score: number
 }
 
 interface MemoryContextInterface { 
@@ -29,10 +28,11 @@ interface MemoryContextInterface {
   idsFlippedCards: number[];  
   idFoundPairsCards: number[];  
   startGame: () => void;
-  resetGame: () => void;
+  // resetGame: () => void;
   gameLevel: number;
   setGameLevel: React.Dispatch<React.SetStateAction<number>>;
   players: PlayersProps[]; 
+  setPlayers: React.Dispatch<React.SetStateAction<PlayersProps[]>>;
   currentPlayerIndex: number;
 }
 
@@ -45,10 +45,11 @@ const initialValue: MemoryContextInterface = {
   idsFlippedCards: [],
   idFoundPairsCards: [],
   startGame: () => {},
-  resetGame: () => {},
-  gameLevel: 4,
+  // resetGame: () => {},
+  gameLevel: 2,
   setGameLevel: () => {},
   players: [], 
+  setPlayers: () => {},
   currentPlayerIndex: 0
 }
  
@@ -61,7 +62,7 @@ export const MemoryContextProvider = ({ children }: UserContextProps) => {
   const { shuffledCards } = useFetch() 
   const [loading, setLoading] = React.useState(false)
 
-  const [cards, setCards] = React.useState<Card[]>(initialValue.cards)  
+  const [cards, setCards] = React.useState<Card[]>([])  
   const [idsFlippedCards, setIdsFlippedCards] = React.useState<number[]>([])
   const [idFoundPairsCards, setIdFoundPairsCards] = React.useState<number[]>([])
  
@@ -70,38 +71,24 @@ export const MemoryContextProvider = ({ children }: UserContextProps) => {
   const [gameLevel,setGameLevel] = React.useState(initialValue.gameLevel)
 
   const [currentPlayerIndex, setCurrentPlayerIndex] = React.useState(0)
-  const [players, setPlayers] = React.useState([
-    {
-      name: 'Alexsandro ',
-      score: 0,
-      current: true
-    },
-    {
-      name: 'Adriana ',
-      score: 0,
-      current: false
-    },
-    {
-      name: 'Kemilly ',
-      score: 0,
-      current: false
-    },
-    {
-      name: 'Alexia ',
-      score: 0,
-      current: false
-    }
-  ])
-
+  const [players, setPlayers] = React.useState<PlayersProps[]>([])
 
   const startGame = () => {
+    resetGame()
     setLoading(true)  
     setCards(shuffledCards)
     setLoading(false)
+    
   }
 
-  const resetGame = () => {}
-
+  const resetGame = () => { 
+    setIdsFlippedCards([])
+    setIdFoundPairsCards([])
+    setNumbersCardsFlipped(0)
+    
+    // setScore(0)
+  }
+  
   // INCREMENT A VALUE WHEN THE CARD IS FLIPPED
   const numberOfTimesFlipped = () => {
     setNumbersCardsFlipped((amount) => amount + 1)
@@ -169,10 +156,11 @@ export const MemoryContextProvider = ({ children }: UserContextProps) => {
     idsFlippedCards,
     idFoundPairsCards,
     startGame,
-    resetGame,
+    // resetGame,
     gameLevel,
     setGameLevel,
     players,
+    setPlayers,
     currentPlayerIndex, 
   }
 
