@@ -1,5 +1,6 @@
 import { useState } from "react"
 import PlayerForm from "./PlayerForm"
+import GameLevel from "./GameLevel"
 
 const GameConfig = () => {
   const [showConfig, setShowConfig] = useState(false)
@@ -17,8 +18,10 @@ const GameConfig = () => {
       </div>
 
       <div className={`${showConfig ? 'flex' : 'hidden'}`}>
-      <PlayerForm />
+        <PlayerForm />
       </div>
+
+      <GameLevel />
     </div>
   )
 }
