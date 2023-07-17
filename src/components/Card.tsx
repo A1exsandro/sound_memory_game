@@ -29,8 +29,8 @@ const Card = ({ id, idBoth, imageName, imageUrl, soundUrl }: Card) => {
   const handleClick = () => { 
     playAudio() 
     showCard({ id, idBoth })
-  }  
-  // console.log(id)
+  }   
+
   return (
     <Tilt
       options={{

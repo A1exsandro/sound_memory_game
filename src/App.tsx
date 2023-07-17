@@ -3,18 +3,12 @@ import { MemoryContextProvider } from "./contexts/MemoryContext"
 
 const App = () => { 
 
-  return ( 
-    <>
-      <div className="bg-black text-white flex justify-center py-2">
-        Sound Memory Game
-      </div>
-      
-      <div className="">
-        <MemoryContextProvider>
-          <MemoryGame />
-        </MemoryContextProvider>
-      </div>
-    </>
+  return (  
+    <div className="h-full">
+      <MemoryContextProvider>
+        <MemoryGame />
+      </MemoryContextProvider>
+    </div> 
   )
 }
 
