@@ -33,7 +33,7 @@ interface MemoryContextInterface {
   setGameLevel: React.Dispatch<React.SetStateAction<number>>;
   players: PlayersProps[]; 
   setPlayers: React.Dispatch<React.SetStateAction<PlayersProps[]>>;
-  currentPlayerIndex: number;
+  currentPlayerIndex: number | null;
 }
 
 const initialValue: MemoryContextInterface = { 
@@ -46,9 +46,12 @@ const initialValue: MemoryContextInterface = {
   idFoundPairsCards: [],
   startGame: () => {},
   // resetGame: () => {},
-  gameLevel: 2,
+  gameLevel: 26,
   setGameLevel: () => {},
-  players: [], 
+  players: [{
+    name: 'Score',
+    score: 0
+  }], 
   setPlayers: () => {},
   currentPlayerIndex: 0
 }
@@ -61,6 +64,7 @@ export const MemoryContextProvider = ({ children }: UserContextProps) => {
   // ADD CONTEXT
   const { shuffledCards } = useFetch() 
   const [loading, setLoading] = React.useState(false)
+  const [gameLevel,setGameLevel] = React.useState<number>(initialValue.gameLevel)
 
   const [cards, setCards] = React.useState<Card[]>([])  
   const [idsFlippedCards, setIdsFlippedCards] = React.useState<number[]>([])
@@ -68,27 +72,29 @@ export const MemoryContextProvider = ({ children }: UserContextProps) => {
  
   
   const [numbersCardsFlipped, setNumbersCardsFlipped] = React.useState(0) 
-  const [gameLevel,setGameLevel] = React.useState(initialValue.gameLevel)
+  
 
   const [currentPlayerIndex, setCurrentPlayerIndex] = React.useState(0)
-  const [players, setPlayers] = React.useState<PlayersProps[]>([])
+  const [players, setPlayers] = React.useState<PlayersProps[]>(initialValue.players)
+
+
+  // React.useEffect(() => {
+  //   setCards(shuffledCards)
+  // },[gameLevel])
 
   const startGame = () => {
-    resetGame()
     setLoading(true)  
     setCards(shuffledCards)
     setLoading(false)
-    
   }
 
   const resetGame = () => { 
     setIdsFlippedCards([])
     setIdFoundPairsCards([])
     setNumbersCardsFlipped(0)
-    
-    // setScore(0)
+    setPlayers(initialValue.players) 
   }
-  
+
   // INCREMENT A VALUE WHEN THE CARD IS FLIPPED
   const numberOfTimesFlipped = () => {
     setNumbersCardsFlipped((amount) => amount + 1)
