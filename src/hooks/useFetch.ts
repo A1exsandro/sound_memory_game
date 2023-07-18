@@ -33,8 +33,15 @@ export const useFetch = () => {
 
     Promise.all(promises)
       .then((urls) => setImages(urls)) 
+      .catch((error) => {
+        console.log(error)
+      });
+
     Promise.all(audioPromises)
       .then((audios) => setSounds(audios)) 
+      .catch((error) => {
+        console.log(error)
+      });
   },[])
 
   // CREATING AN OBJECT THROUGH ARRAY INTERACTION
