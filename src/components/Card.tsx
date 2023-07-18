@@ -14,7 +14,7 @@ const Card = ({ id, idBoth, imageName, imageUrl, soundUrl }: Card) => {
   const { idsFlippedCards, idFoundPairsCards, showCard } = useMemory()
   const flipped = idsFlippedCards.includes(id) || idFoundPairsCards.includes(idBoth)
   const audioRef: MutableRefObject<HTMLAudioElement | null> = useRef(null)
-
+ 
   useEffect(() => {
     const audioElement = new Audio(soundUrl)
     audioRef.current = audioElement
@@ -50,13 +50,24 @@ const Card = ({ id, idBoth, imageName, imageUrl, soundUrl }: Card) => {
           
         {/* FRONT OF CARD */}
         <div 
-          className="flex justify-center items-center flip rotateY rounded-xl"
+          className={`flex justify-center items-center flip rotateY rounded-xl
+          ${id !== idBoth && 'border-solid border-2 border-indigo-600'}`}
         > 
-          <img 
-            className="w-full h-full rounded-xl"
-            src={imageUrl} 
-            alt={imageName}
-          />
+          {
+            id === idBoth ? (
+              <img 
+                className="w-full h-full rounded-xl"
+                src={imageUrl} 
+                alt={imageName}
+              /> 
+            ) : (
+              <div 
+                className={`font-bold ${imageName.length > 10 && '-rotate-45'}`}
+              >
+                {imageName}
+              </div>
+            )
+          }
         </div>
 
         {/* BACK OF CARD */}
