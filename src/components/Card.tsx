@@ -21,14 +21,14 @@ const Card = ({ id, idBoth, imageName, imageUrl, soundUrl }: Card) => {
   },[soundUrl])
 
   const playAudio = () => {
-    if (audioRef.current) {
+    if (audioRef.current && idsFlippedCards.length < 2) {
       audioRef.current.play()
     }
   } 
 
-  const handleClick = () => { 
-    playAudio() 
+  const handleClick = () => {  
     showCard({ id, idBoth })
+    playAudio()
   }   
 
   return (
