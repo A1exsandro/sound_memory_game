@@ -4,22 +4,15 @@ import Players from './Players'
 import Header from './Header'
 
 const MemoryGame = () => { 
-  const { cards, loading, startGame } = useMemory()
+  const { cards, loading } = useMemory()
  
   return (
-    <div className="p-3">
+    <div className="flex flex-col items-center p-3">
       <h1>Memory Game</h1>
 
-      <Players />
+      <Players /> 
 
-      <button
-        className="bg-black text-white cursor-pointer px-4"
-        onClick={startGame}
-      >
-        Start
-      </button>
-
-      <div className="grid grid-cols-4 gap-3">
+      <div className="flex justify-center flex-wrap gap-3 mt-2">
         { 
           loading ? (
             <div className="fixed text-center font-bold w-full">

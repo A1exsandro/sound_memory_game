@@ -40,7 +40,7 @@ const Card = ({ id, idBoth, imageName, imageUrl, soundUrl }: Card) => {
       }}
     >
       <div 
-        className={`aspect-[3/4] card-container rounded-xl
+        className={`aspect-[3/4] w-[78px] sm:w-[88px] 2xl:w-40 card-container rounded-xl
         ${flipped ? 'rotateY' : ''}`}
         onClick={() => handleClick()}
       >

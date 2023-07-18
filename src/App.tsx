@@ -4,7 +4,7 @@ import { MemoryContextProvider } from "./contexts/MemoryContext"
 const App = () => { 
 
   return (  
-    <div className="h-full">
+    <div className="">
       <MemoryContextProvider>
         <MemoryGame />
       </MemoryContextProvider>
