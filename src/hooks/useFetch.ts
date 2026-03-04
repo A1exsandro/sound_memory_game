@@ -1,80 +1,78 @@
-import { useEffect, useState } from "react" 
+import { useEffect, useState } from "react"
+import { useMemory } from "../contexts/MemoryContext"
 
-import { getStorage } from '../services/Firebase'
-import { ref, getDownloadURL } from "firebase/storage" 
-import { cardNames } from "../constants/cards"
-import { useMemory } from "../contexts/MemoryContext";
+interface ApiCard {
+  name: string
+  imageUrl: string
+  soundUrl: string
+}
 
 interface Card {
-  id: number;
-  idBoth: number;
-  imageName: string;
-  imageUrl: string;
-  soundUrl: string;
+  id: number
+  idBoth: number
+  imageName: string
+  imageUrl: string
+  soundUrl: string
 }
- 
-const storage = getStorage()
-const data = cardNames
 
 export const useFetch = () => {
   const { gameLevel } = useMemory()
-  const [images, setImages] = useState<string[]>([])
-  const [sounds, setSounds] = useState<string[]>([])
-  const makedCards = []
 
-  // GET DATA FROM FIREBASE
+  const [cardsFromApi, setCardsFromApi] = useState<ApiCard[]>([])
+  const [loading, setLoading] = useState(true)
+
+  const baseUrl = import.meta.env.VITE_BASE_URL
+  
   useEffect(() => {
-    const promises = data.map((dt) => (
-      getDownloadURL(ref(storage, `images/${dt}.jpeg`))
-    ))
-    const audioPromises = data.map((dt) => (
-      getDownloadURL(ref(storage, `audio/${dt}.mp3`))
-    ))
-
-    Promise.all(promises)
-      .then((urls) => setImages(urls)) 
-      .catch((error) => {
-        console.log(error)
-      });
-
-    Promise.all(audioPromises)
-      .then((audios) => setSounds(audios)) 
-      .catch((error) => {
-        console.log(error)
-      });
-  },[])
-
-  // CREATING AN OBJECT THROUGH ARRAY INTERACTION
-  for (let i = 0; i < data.length && i < gameLevel; i++) {
-    makedCards[i] = {
-      idBoth: i,  
-      imageName: data[i],
-      imageUrl: images[i],
-      soundUrl: sounds[i],
+    const fetchAssets = async () => {
+      try {
+        const response = await fetch(baseUrl)
+        const data = await response.json()
+        setCardsFromApi(data)
+      } catch (error) {
+        console.error("Erro ao buscar assets:", error)
+      } finally {
+        setLoading(false)
+      }
     }
-  }   
 
-  // DUPLICATING THE CARDS
-  const pairsOfCards = [ ...makedCards, ...makedCards ].map((card, id) => ({
-    id, ...card
+    fetchAssets()
+  }, [])
+
+  // Mantém compatibilidade
+  const images = cardsFromApi.map(c => c.imageUrl)
+  const sounds = cardsFromApi.map(c => c.soundUrl)
+
+  const limitedCards = cardsFromApi.slice(0, gameLevel)
+
+  const makedCards = limitedCards.map((card, index) => ({
+    idBoth: index,
+    imageName: card.name,
+    imageUrl: card.imageUrl,
+    soundUrl: card.soundUrl,
   }))
 
-  // SHUFFLER THE CARDS
+  const pairsOfCards = [...makedCards, ...makedCards].map((card, id) => ({
+    id,
+    ...card,
+  }))
+
   const shuffleCards = (list: Card[]): Card[] => {
     for (let i = list.length - 1; i > 0; i--) {
       const randomIndex = Math.floor(Math.random() * (i + 1))
-  
-      const item = list[i]
-      const randomItem = list[randomIndex]
-  
-      list[i] = randomItem
-      list[randomIndex] = item
+      ;[list[i], list[randomIndex]] = [list[randomIndex], list[i]]
     }
-  
     return list
   }
 
-  const shuffledCards: Card[] = shuffleCards(pairsOfCards)
+  const shuffledCards = shuffleCards(pairsOfCards)
 
-  return { images, sounds, makedCards, pairsOfCards, shuffledCards}
+  return {
+    images,
+    sounds,
+    makedCards,
+    pairsOfCards,
+    shuffledCards,
+    loading
+  }
 }
